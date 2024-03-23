@@ -1,62 +1,22 @@
-<!-- <template>
-    <h1 class="text-center text-3xl my-[2%]">Product List</h1>
-    <div class="flex px-[2%]">
-        <UTable :rows="products" :columns="columns">
-            <template #thumbnail-data="{ row }">
-                <img class="w-[100px] h-[100px]" :src="row.thumbnail" alt="Thumbnail" />
-            </template>
-            <template #rating-data="{ row }">
-                <span :class="row.rating < 4.5 ? 'text-red-700' : 'text-green-700'">{{ row.rating }}</span>
-            </template>
-        </UTable>
-    </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-
-const products = ref([]);
-
-const fetchProducts = async () => {
-    const { products: data } = (await $fetch('https://dummyjson.com/products') as any);
-    products.value = data;
-}
-
-fetchProducts();
-
-const columns = [{
-    key: 'price',
-    label: 'Ціна',
-    sortable: true,
-}, {
-    key: 'title',
-    label: 'Назва',
-    sortable: true,
-}, {
-    key: 'description',
-    label: 'Опис',
-}, {
-    key: 'rating',
-    label: 'Оцінка',
-    sortable: true,
-}, {
-    key: 'brand',
-    label: 'Бренд',
-    sortable: true,
-}, {
-    key: 'category',
-    label: 'Категорія',
-    sortable: true,
-}, {
-    key: 'thumbnail',
-    label: 'Фото',
-    sortable: false,
-}];
-
-</script> -->
-
 <script lang="ts" setup>
 import { ref } from 'vue';
+
+export interface IProduct {
+    title: string,
+    description: string,
+    price: number,
+    rating: number,
+    brand: string,
+    category: string,
+    thumbnail: string
+}
+
+export interface IProductResponse {
+    products: IProduct[]
+    limit: number,
+    skip: number,
+    total: number
+}
 
 const columns = [{
     key: 'price',
@@ -85,7 +45,7 @@ const columns = [{
 const selectedColumns = ref(columns)
 const columnsTable = computed(() => columns.filter((column) => selectedColumns.value.includes(column)))
 
-const selectedRows = ref<any[]>([])
+const selectedRows = ref<IProduct[]>([])
 
 const search = ref('')
 
@@ -94,7 +54,7 @@ const pageCount = ref(10)
 const pageFrom = computed(() => (page.value - 1) * pageCount.value + 1)
 const pageTo = computed(() => page.value * pageCount.value)
 const total = ref(0);
-const products = ref([]);
+const products = ref<IProduct[]>([]);
 const loading = ref(true);
 const searching = ref(false);
 
@@ -111,13 +71,13 @@ const searchProducts = async () => {
 
     const searchValue = search.value.toLowerCase();
 
-    products.value = products.value.filter((x: any) => (x.title as string).toLowerCase().includes(searchValue)
-        || (x.category as string).toLowerCase().includes(searchValue)
-        || (x.brand as string).toLowerCase().includes(searchValue));
+    products.value = products.value.filter((x: IProduct) => x.title.toLowerCase().includes(searchValue)
+        || x.category.toLowerCase().includes(searchValue)
+        || x.brand.toLowerCase().includes(searchValue));
 }
 
 const getData = async (currentPage: number, pageCount: number) => {
-    const { data, pending } = await useLazyAsyncData<any>('products', () => $fetch(`https://dummyjson.com/products`, {
+    const { data, pending } = await useLazyAsyncData<IProductResponse>('products', () => $fetch(`https://dummyjson.com/products`, {
         query: {
             'limit': pageCount,
             'skip': (currentPage - 1) * pageCount,
@@ -127,8 +87,10 @@ const getData = async (currentPage: number, pageCount: number) => {
     })
 
     loading.value = pending.value;
-    total.value = data.value.total;
-    products.value = data.value.products;
+    if (data.value) {
+        total.value = data.value.total;
+        products.value = data.value.products;
+    }
 }
 
 await getData(page.value, pageCount.value);
