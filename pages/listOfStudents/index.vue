@@ -130,6 +130,13 @@ watch(page, async (newPage) => {
                     Reset
                 </UButton>
             </div>
+            <div class="flex gap-1.5 items-center">
+                <USelectMenu v-model="selectedColumns" :options="columns" :disabled="loading" multiple>
+                    <UButton icon="i-heroicons-view-columns" color="gray" size="xs">
+                        Columns
+                    </UButton>
+                </USelectMenu>
+            </div>
         </div>
 
         <UTable v-model="selectedRows" :rows="products" :columns="columnsTable" :loading="loading"
@@ -151,6 +158,9 @@ watch(page, async (newPage) => {
                         <span class="font-medium">{{ pageFrom }}</span>
                         to
                         <span class="font-medium">{{ pageTo }}</span>
+                        of
+                        <span class="font-medium">{{ total }}</span>
+                        results
                     </span>
                 </div>
 
