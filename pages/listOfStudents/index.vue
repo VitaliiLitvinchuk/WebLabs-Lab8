@@ -41,7 +41,6 @@ const columns = [{
     label: 'Фото',
 }];
 
-
 const selectedColumns = ref(columns)
 const columnsTable = computed(() => columns.filter((column) => selectedColumns.value.includes(column)))
 
@@ -65,32 +64,35 @@ const resetFilters = async () => {
 }
 
 const searchProducts = async () => {
-    searching.value = true;
     page.value = 1;
-    await getData(page.value, total.value);
-
-    const searchValue = search.value.toLowerCase();
-
-    products.value = products.value.filter((x: IProduct) => x.title.toLowerCase().includes(searchValue)
-        || x.category.toLowerCase().includes(searchValue)
-        || x.brand.toLowerCase().includes(searchValue));
+    searching.value = true;
+    await getData(page.value, total.value, `https://dummyjson.com/products/search?q=${search.value}`);
 }
 
-const getData = async (currentPage: number, pageCount: number) => {
-    const { data, pending } = await useLazyAsyncData<IProductResponse>('products', () => $fetch(`https://dummyjson.com/products`, {
+const setData = (data: IProductResponse | null, pending: boolean) => {
+    loading.value = pending;
+
+    if (data) {
+        total.value = data.total;
+        products.value = data.products;
+    }
+}
+
+const getData = async (currentPage: number, pageCount: number, request: string = `https://dummyjson.com/products`) => {
+    const { data, pending } = await useLazyAsyncData<IProductResponse>('products', () => $fetch(request, {
         query: {
             'limit': pageCount,
             'skip': (currentPage - 1) * pageCount,
         }
     }), {
-        default: () => null
-    })
+        default: () => null,
+    });
 
-    loading.value = pending.value;
-    if (data.value) {
-        total.value = data.value.total;
-        products.value = data.value.products;
-    }
+    watch(pending, () => {
+        setData(data.value, pending.value);
+    });
+
+    setData(data.value, pending.value);
 }
 
 await getData(page.value, pageCount.value);
@@ -124,8 +126,7 @@ watch(page, async (newPage) => {
 
         <div class="flex justify-between items-center w-full px-4 py-3">
             <div class="flex gap-1.5 items-center">
-                <UButton icon="i-heroicons-funnel" color="gray" size="xs" :disabled="search === ''"
-                    @click="resetFilters">
+                <UButton icon="i-heroicons-funnel" color="gray" size="xs" :disabled="!searching" @click="resetFilters">
                     Reset
                 </UButton>
             </div>
@@ -153,7 +154,7 @@ watch(page, async (newPage) => {
                     </span>
                 </div>
 
-                <UPagination v-model="page" :disabled="searching || loading" :page-count="pageCount" :total="total" :ui="{
+                <UPagination v-model="page" :disabled="loading" :page-count="pageCount" :total="total" :ui="{
         wrapper: 'flex items-center gap-1',
         rounded: '!rounded-full min-w-[32px] justify-center',
         default: {
