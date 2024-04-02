@@ -14,6 +14,9 @@
               <li>
                 <NuxtLink to="/listOfStudents0.5">List Of Students 0.5</NuxtLink>
               </li>
+              <li>
+                <NuxtLink to="/graphics">Graphics</NuxtLink>
+              </li>
             </ul>
           </div>
         </nav>
