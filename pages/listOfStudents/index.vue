@@ -103,6 +103,7 @@ watch(page, async (newPage) => {
 </script>
 
 <template>
+    <title>List of students</title>
     <UCard class="w-full" :ui="{
         base: '',
         ring: '',
