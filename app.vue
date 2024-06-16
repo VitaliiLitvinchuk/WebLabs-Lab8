@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="h-screen">
     <NuxtLayout>
       <header>
         <nav class="flex justify-between bg-gray-900 text-white">
@@ -16,6 +16,9 @@
               </li>
               <li>
                 <NuxtLink to="/graphics">Graphics</NuxtLink>
+              </li>
+              <li>
+                <NuxtLink to="/posts">Blog Posts</NuxtLink>
               </li>
             </ul>
           </div>
