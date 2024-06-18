@@ -1,7 +1,12 @@
+export interface IColumn {
+    key: string, 
+    label: string
+}
+
 export interface IUser {
-    id: number,
-    name: string,
-    email: string,
+    id: number | null,
+    name: string | null,
+    email: string | null,
     email_verified_at: Date | null,
     two_factor_confirmed_at: Date | null,
     current_team_id: number | null,
@@ -14,6 +19,7 @@ export interface IUser {
 export interface ICategory {
     id: number,
     parent_id: number | null,
+    parent_category: ICategory | null,
     slug: string,
     title: string,
     description: string | null,
@@ -38,5 +44,4 @@ export interface IPost {
     deleted_at: Date | null,
     user: IUser,
     category: ICategory
-
 }

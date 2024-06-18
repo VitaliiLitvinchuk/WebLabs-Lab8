@@ -1,9 +1,9 @@
 <template>
-    <div class="container">
+    <div class="w-full">
         <div class="flex justify-center">
             <div class="w-full">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body w-full">
                         <table class="table table-auto">
                             <thead>
                                 <tr>
@@ -19,7 +19,7 @@
                                     <td>{{ post.id }}</td>
                                     <td>{{ post.user.name }}</td>
                                     <td>{{ post.category.title }}</td>
-                                    <td><a :href="'/admin/blog/posts/' + post.id + '/edit'">{{ post.title }}</a></td>
+                                    <td><NuxtLink :to="`/post?id=${post.id}`">{{ post.title }}</NuxtLink></td>
                                     <td>{{ post.published_at }}
                                     </td>
                                 </tr>
