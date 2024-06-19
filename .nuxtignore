@@ -1,2 +1,3 @@
 pages/posts/components/table/*.vue
 pages/posts/components/nuxtTable/*.vue
+pages/categories/components/nuxtTable/*.vue

@@ -20,6 +20,9 @@
               <li>
                 <NuxtLink to="/posts">Blog Posts</NuxtLink>
               </li>
+              <li>
+                <NuxtLink to="/categories">Blog Categories</NuxtLink>
+              </li>
             </ul>
           </div>
         </nav>

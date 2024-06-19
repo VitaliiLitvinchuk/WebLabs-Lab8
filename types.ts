@@ -1,4 +1,4 @@
-export interface IColumn {
+export interface IFunctional {
     key: string, 
     label: string
 }
@@ -17,31 +17,63 @@ export interface IUser {
 }
 
 export interface ICategory {
-    id: number,
-    parent_id: number | null,
+    id: number | null,
+    parent_id: number,
     parent_category: ICategory | null,
     slug: string,
     title: string,
     description: string | null,
     created_at: Date | null,
+    published_at: Date | null,
     updated_at: Date | null,
     deleted_at: Date | null
 }
 
+export const emptyCategory : ICategory = {
+    id: null,
+    parent_id: 1,
+    parent_category: null,    
+    created_at: null,
+    updated_at: null,
+    deleted_at: null,
+    published_at: null,
+    slug: '',
+    title: '',
+    description: '',
+}
+
 export interface IPost {
-    id: number,
+    id: number | null,
     category_id: number,
-    user_id: number,
+    user_id: number | null,
     slug: string,
     title: string,
     excerpt: string,
     content_raw: string,
-    content_html: string,
+    content_html: string | null,
     is_published: boolean,
     published_at: Date | null,
     created_at: Date | null,
     updated_at: Date | null,
     deleted_at: Date | null,
-    user: IUser,
-    category: ICategory
+    user: IUser | null,
+    category: ICategory | null
+}
+
+export const emptyPost: IPost = {
+    id: null,
+    category: null,
+    created_at: null,
+    updated_at: null,
+    deleted_at: null,
+    published_at: null,
+    content_html: null,
+    user: null,
+    user_id: null,
+    slug: '',
+    title: '',
+    is_published: false,
+    excerpt: '',
+    category_id: 1,
+    content_raw: '',
 }

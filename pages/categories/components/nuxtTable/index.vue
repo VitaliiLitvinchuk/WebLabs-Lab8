@@ -1,10 +1,15 @@
 <template>
-    <UTable :rows="posts" :columns="columns" sort-asc-icon="i-heroicons-arrow-up"
+    <UTable :rows="categories" :columns="columns" sort-asc-icon="i-heroicons-arrow-up"
         sort-desc-icon="i-heroicons-arrow-down" sort-mode="manual" class="w-full" :ui="{ td: { base: 'truncate' } }">
         <template #title-data="{ row }">
-            <NuxtLink :to="`/post?id=${row.id}`">
+            <NuxtLink :to="`/category?id=${row.id}`">
                 {{ row.title }}
             </NuxtLink>
+        </template>
+        <template #parent_category-data="{ row }">
+            <div :class="row.parent_category ? row.parent_category.id === 1 ? 'text-slate-700' : '' : 'text-slate-700'">
+                {{ row.parent_category ? row.parent_category.title : 'Корінь' }}
+            </div>
         </template>
         <template #actions-data="{ row }">
             <div>
@@ -19,10 +24,10 @@
 </template>
 
 <script setup lang="ts">
-import type { IFunctional, IPost } from '~/types';
+import type { IFunctional, ICategory } from '~/types';
 
-const { posts, columns } = defineProps<{
-    posts: [IPost],
+const { categories, columns } = defineProps<{
+    categories: [ICategory],
     columns: IFunctional[]
 }>();
 
