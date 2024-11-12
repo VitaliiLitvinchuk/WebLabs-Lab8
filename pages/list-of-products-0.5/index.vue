@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import type { IProductResponse, IProduct } from '../listOfStudents/index.vue';
+import type { IProductResponse, IProduct } from '../list-of-products/index.vue';
 
 export interface ISortable {
     column: string,
